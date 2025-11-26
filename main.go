@@ -38,7 +38,7 @@ func getInfoFlags(argList []string) () {
 		fmt.Println("-h, --help: Show this help menu")
 		fmt.Println("-v, --version: Get version number")
 		fmt.Println("-r, --reverse: Reverse the encryption on .ft files")
-		fmt.Println("-s, --silent: Reverse the encryption on .ft files")
+		fmt.Println("-s, --silent: Silences output during encryption or decryption")
 		os.Exit(0)
 	}
 	if hasFlag(argList, "-v", "--version") {
