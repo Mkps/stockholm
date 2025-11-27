@@ -121,7 +121,6 @@ func runInfection(opts *StockholmOptions) {
 }
 
 func main() {
-	fmt.Println("Program started")
 	opts, err := parser(os.Args)
 	if err != nil {
 		ErrorExit(err)
