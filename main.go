@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"strings"
 	"path/filepath"
 	"crypto/sha256"
 
@@ -102,8 +101,7 @@ func reverseInfection(opts *StockholmOptions) {
 		ErrorExit(err)
 	}
 	for _, file := range(files) {
-		cleaned := strings.TrimSuffix(file, ".ft")
-		err = crypt.DecryptFile(opts.key, file, cleaned)
+		err = crypt.DecryptFile(opts.key, file)
 		if err != nil {
 			fmt.Println(err)
 		}
