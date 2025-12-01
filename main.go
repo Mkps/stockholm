@@ -41,6 +41,21 @@ func hasFlag(args []string, flags ...string) bool {
 	return false
 }
 
+func isFlag(value string) bool {
+	switch value {
+	case "-r":
+		return true
+	case "-s":
+		return true
+	case "-h":
+		return true
+	case "-v":
+		return true
+	default:
+		return false
+	}
+}
+
 func getInfoFlags(argList []string) () {
 	if hasFlag(argList, "-h", "--help") {
 		fmt.Println("Stockholm help:")
@@ -72,7 +87,7 @@ func getKeyValue(argList []string) ([]byte, error) {
 		}
 	}
 
-	if key_value == "" {
+	if key_value == "" || isFlag(key_value) {
 		return nil, errors.New("Error: Could not find key value")
 	}
 	if len(key_value) < 16 {
