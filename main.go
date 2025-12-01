@@ -27,7 +27,6 @@ type StockholmOptions struct {
 
 func ErrorExit(err error) {
 	fmt.Println(err)
-	fmt.Println("stockholm status: [Error]")
 	os.Exit(1)
 }
 
@@ -167,5 +166,5 @@ func main() {
 	} else {
 		runInfection(opts)
 	}
-	fmt.Println("stockholm status: [Done]")
+	os.Exit(0)
 }
