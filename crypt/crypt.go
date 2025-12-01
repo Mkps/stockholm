@@ -9,12 +9,14 @@ import (
 	"os"
 )
 
-func EncryptFile(key []byte, inputPath, outputPath string) error {
+func EncryptFile(key []byte, filePath string) error {
 	// Read file to encrypt
-	plaintext, err := os.ReadFile(inputPath)
+	plaintext, err := os.ReadFile(filePath)
 	if err != nil {
 		return err
 	}
+	dest := filePath + ".ft"
+	os.Rename(filePath, dest)
 
 	// Create AES cipher
 	block, err := aes.NewCipher(key)
@@ -38,7 +40,7 @@ func EncryptFile(key []byte, inputPath, outputPath string) error {
 	ciphertext := gcm.Seal(nonce, nonce, plaintext, nil)
 
 	// Write nonce + ciphertext to output file
-	return os.WriteFile(outputPath, ciphertext, 0644)
+	return os.WriteFile(dest, ciphertext, 0644)
 }
 
 func DecryptFile(key []byte, inputPath, outputPath string) error {

